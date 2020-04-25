@@ -26,9 +26,14 @@ public class BookController {
         return bookRepository.save(book);
     }
 
-    @PostMapping("/books")
+    @PostMapping("/books/author")
     public Book findBooksByAuthor(@Valid @RequestBody String author_name) {
         return bookRepository.findBooksByAuthor(author_name);
+    }
+
+    @PostMapping("/books/authorName")
+    public Book findBooksByAuthorName(@Valid @RequestBody String author_name) {
+        return bookRepository.findBooksByAuthorName(author_name);
     }
 
     @GetMapping("/books/{id}")
