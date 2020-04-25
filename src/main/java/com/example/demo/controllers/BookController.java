@@ -3,6 +3,7 @@ package com.example.demo.controllers;
 import com.example.demo.models.Book;
 import com.example.demo.repositories.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -40,5 +41,13 @@ public class BookController {
 
         Book updatedBook = bookRepository.save(book);
         return updatedBook;
+    }
+
+    @DeleteMapping("/books/{id}")
+    public ResponseEntity deleteBook(@PathVariable(value = "id") Long bookId) {
+        Book book = bookRepository.findById(bookId);
+
+        bookRepository.delete(book);
+        return ResponseEntity.ok().build();
     }
 }
