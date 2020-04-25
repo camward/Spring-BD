@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 public class BookController {
@@ -26,7 +25,20 @@ public class BookController {
     }
 
     @GetMapping("/books/{id}")
-    public Optional getBookById(@PathVariable(value = "id") Long bookId) {
+    public Book getBookById(@PathVariable(value = "id") Long bookId) {
         return bookRepository.findById(bookId);
+    }
+
+    @PutMapping("/books/{id}")
+    public Book updateBook(@PathVariable(value = "id") Long bookId,
+                           @Valid @RequestBody Book bookDetails) {
+        Book book = bookRepository.findById(bookId);
+
+        book.setBook_name(bookDetails.getBook_name());
+        book.setAuthor_name(bookDetails.getAuthor_name());
+        book.setIsbn(bookDetails.getIsbn());
+
+        Book updatedBook = bookRepository.save(book);
+        return updatedBook;
     }
 }
