@@ -1,5 +1,6 @@
 package com.example.demo.controllers;
 
+import com.example.demo.exceptions.BookNotFoundException;
 import com.example.demo.models.Book;
 import com.example.demo.repositories.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,26 +27,30 @@ public class BookController {
     }
 
     @GetMapping("/books/{id}")
-    public Book getBookById(@PathVariable(value = "id") Long bookId) {
-        return bookRepository.findById(bookId);
+    public Book getBookById(@PathVariable(value = "id") Long bookId) throws Throwable {
+        return (Book) bookRepository.findById(bookId)
+                .orElseThrow(() -> new BookNotFoundException(bookId));
     }
 
     @PutMapping("/books/{id}")
     public Book updateBook(@PathVariable(value = "id") Long bookId,
-                           @Valid @RequestBody Book bookDetails) {
-        Book book = bookRepository.findById(bookId);
+                           @Valid @RequestBody Book bookDetails) throws Throwable {
+
+        Book book = (Book) bookRepository.findById(bookId)
+                .orElseThrow(() -> new BookNotFoundException(bookId));
 
         book.setBook_name(bookDetails.getBook_name());
         book.setAuthor_name(bookDetails.getAuthor_name());
         book.setIsbn(bookDetails.getIsbn());
 
-        Book updatedBook = bookRepository.save(book);
+        Book updatedBook = (Book) bookRepository.save(book);
         return updatedBook;
     }
 
     @DeleteMapping("/books/{id}")
-    public ResponseEntity deleteBook(@PathVariable(value = "id") Long bookId) {
-        Book book = bookRepository.findById(bookId);
+    public ResponseEntity deleteBook(@PathVariable(value = "id") Long bookId) throws Throwable {
+        Book book = (Book) bookRepository.findById(bookId)
+                .orElseThrow(() -> new BookNotFoundException(bookId));
 
         bookRepository.delete(book);
         return ResponseEntity.ok().build();
