@@ -26,6 +26,11 @@ public class BookController {
         return bookRepository.save(book);
     }
 
+    @PostMapping("/books")
+    public Book findBooksByAuthor(@Valid @RequestBody String author_name) {
+        return bookRepository.findBooksByAuthor(author_name);
+    }
+
     @GetMapping("/books/{id}")
     public Book getBookById(@PathVariable(value = "id") Long bookId) throws Throwable {
         return bookRepository.findById(bookId)
